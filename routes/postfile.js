@@ -10,14 +10,14 @@ var storage = multer.diskStorage({
       var type = req.params.type
       const path = config.data_folder + '/' + type + '/' + id;
       if (!fs.existsSync(path)) {
-         fs.mkdir(path,function(e){
-            if(!e || (e && e.code === 'EEXIST')){
-                //do something with contents
+         fs.mkdirSync(path, { recursive: true }, function (e) {
+            if (!e || (e && e.code === 'EEXIST')) {
+               //do something with contents
             } else {
-                //debug
-                console.log(e);
+               //debug
+               console.log(e);
             }
-        })
+         })
       }
       cb(null, path);
    },
