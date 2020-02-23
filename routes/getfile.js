@@ -14,7 +14,10 @@ router.get('/:type/:id/:filename', function (req, res, next) {
     //file exists
     return res.download(path)
   }
-  res.send('file not found');
+  res.json({
+    success: false,
+    message: "File isn't exist"
+  });
 
 });
 

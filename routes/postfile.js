@@ -8,7 +8,13 @@ var storage = multer.diskStorage({
    destination: (req, file, cb) => {
       var id = req.params.id
       var type = req.params.type
-      const path = config.data_folder + '/' + type + '/' + id;
+      var path
+      if (req.params.version) {
+         path = config.data_folder + '/' + type + '/' + id + '/' + req.params.version;
+      }
+      else {
+         path = config.data_folder + '/' + type + '/' + id;
+      }
       if (!fs.existsSync(path)) {
          fs.mkdirSync(path, { recursive: true }, function (e) {
             if (!e || (e && e.code === 'EEXIST')) {
@@ -30,9 +36,26 @@ var upload = multer({ storage: storage });
 /* POST users listing. */
 router.post('/:type/:id', upload.single('file'), function (req, res, next) {
    if (!req.file) {
+      res.json({
+         success: false,
+         message: "File upload isn't exist"
+      });
+      return next(err);
+   }
+   res.json({
+      success: true,
+      message: "Upload file success"
+   })
+});
+
+router.post('/:type/:id/:version', upload.single('file'), function (req, res, next) {
+   if (!req.file) {
       res.status(500);
       return next(err);
    }
-   res.send('success');
+   res.json({
+      success: true,
+      message: "Upload file success"
+   })
 });
 module.exports = router;

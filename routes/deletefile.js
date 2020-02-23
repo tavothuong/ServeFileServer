@@ -13,13 +13,22 @@ router.delete('/:type/:id/:filename', function (req, res) {
       // file exists
       fs.unlink(path, function (error) {
          if (error) {
-            return res.send('delete fail')
+            return res.json({
+               success: false,
+               message : "Delete file fail"
+            })
          }
-         return res.send('delete success')
+         return res.json({
+            success: true,
+            message : "Delete file success"
+         })
       });
    }
    else
-      res.send('file not found');
+      res.json({
+         success: false,
+         message : "File isn't exist"
+      });
 
 });
 
