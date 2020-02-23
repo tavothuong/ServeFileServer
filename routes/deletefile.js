@@ -9,19 +9,18 @@ router.delete('/:type/:id/:filename', function (req, res) {
    var type = req.params.type
    var filename = req.params.filename
    const path = config.data_folder + '/' + type + '/' + id + '/' + filename
-   try {
-      if (fs.existsSync(path)) {
-         // file exists
-         fs.unlink(path, function (error) {
-            if (error) {
-               res.send('delete fail')
-            }
-            res.send('delete success')
-         });
-      }
-   } catch (err) {
-      res.send('file not found');
+   if (fs.existsSync(path)) {
+      // file exists
+      fs.unlink(path, function (error) {
+         if (error) {
+            return res.send('delete fail')
+         }
+         return res.send('delete success')
+      });
    }
+   else
+      res.send('file not found');
+
 });
 
 module.exports = router;

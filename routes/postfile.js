@@ -9,6 +9,16 @@ var storage = multer.diskStorage({
       var id = req.params.id
       var type = req.params.type
       const path = config.data_folder + '/' + type + '/' + id;
+      if (!fs.existsSync(path)) {
+         fs.mkdir(path,function(e){
+            if(!e || (e && e.code === 'EEXIST')){
+                //do something with contents
+            } else {
+                //debug
+                console.log(e);
+            }
+        })
+      }
       cb(null, path);
    },
    filename: (req, file, cb) => {

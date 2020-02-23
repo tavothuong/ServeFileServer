@@ -10,15 +10,12 @@ router.get('/:type/:id/:filename', function (req, res, next) {
   var filename = req.params.filename
   const path = config.data_folder + '/' + type + '/' + id + '/' + filename
 
-  try {
-    if (fs.existsSync(path)) {
-      //file exists
-      res.download(path)
-    }
-  } catch (err) {
-    res.send('file not found');    
+  if (fs.existsSync(path)) {
+    //file exists
+    return res.download(path)
   }
-  
+  res.send('file not found');
+
 });
 
 
