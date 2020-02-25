@@ -9,9 +9,12 @@ var usersRouter = require('./routes/users');
 var getfileRouter = require('./routes/getfile')
 var postfileRouter = require('./routes/postfile')
 var deletefileRouter = require('./routes/deletefile')
+var infoRouter = require('./routes/info')
 
 var app = express();
+var mongoose = require('mongoose');
 
+mongoose.connect("mongodb+srv://ckan_default:ckan_default@cluster0-lsszh.mongodb.net/ckan_resource?retryWrites=true&w=majority", {useNewUrlParser: true})
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -30,6 +33,7 @@ app.use('/', indexRouter);
 app.use('/file', getfileRouter)
 app.use('/file', postfileRouter)
 app.use('/file', deletefileRouter)
+app.use('/',infoRouter)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
