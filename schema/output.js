@@ -1,11 +1,7 @@
 var mongoose = require('mongoose')
 var outputSchema = new mongoose.Schema({
    call_id: String,
-   values:
-   {
-      "result": String,
-      "message": String
-   },
+   values: {},
    error: String
 });
 

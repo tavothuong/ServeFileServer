@@ -1,12 +1,7 @@
 var mongoose = require('mongoose')
 var inputSchema = new mongoose.Schema({
    call_id: String,
-   values: [
-      {
-         "name": String,
-         "value": String
-      }
-   ]
+   values: []
 });
 
 let Input = mongoose.model('Input', inputSchema);
