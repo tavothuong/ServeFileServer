@@ -29,12 +29,12 @@ var storage = multer.diskStorage({
    },
    filename: (req, file, cb) => {
       console.log(file);
-      cb(null, req.body.filename);
+      cb(null, req.params.filename);
    }
 });
 var upload = multer({ storage: storage });
 /* POST users listing. */
-router.post('/:type/:id', upload.single('file'), function (req, res, next) {
+router.post('/:type/:id/:filename', upload.single('file'), function (req, res, next) {
    if (!req.file) {
       res.json({
          success: false,
@@ -48,7 +48,7 @@ router.post('/:type/:id', upload.single('file'), function (req, res, next) {
    })
 });
 
-router.post('/:type/:id/:version', upload.single('file'), function (req, res, next) {
+router.post('/:type/:id/:version/:filename', upload.single('file'), function (req, res, next) {
    if (!req.file) {
       res.status(500);
       return next(err);
