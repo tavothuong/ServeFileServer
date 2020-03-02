@@ -103,7 +103,7 @@ router.post('/input/:call_id', function (req, res, next) {
       call_id: call_id,
       values: values
    })
-   Input.find({ _id: id }, (err, result) => {
+   Input.find({ call_id: call_id }, (err, result) => {
       if (err || result[0]) {
          return res.json({
             success: false,
