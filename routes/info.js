@@ -4,23 +4,23 @@ var mongoose = require('mongoose');
 var Input = require('../schema/input')
 var Output = require('../schema/output')
 var Request_form = require('../schema/request_form')
-router.get('/input/:call_id/:id/', function (req, res, next) {
+router.get('/input/:call_id', function (req, res, next) {
    var id = req.params.id
    var call_id = req.params.call_id
 
-   Input.find({ _id: id }, (err, result) => {
+   Input.find({ call_id: call_id }, (err, result) => {
       if (err || !result[0]) {
          return res.json({
             success: false,
             message: "Not exist"
          })
       }
-      if (result[0].call_id != call_id) {
-         return res.json({
-            success: false,
-            message: "call_id don't have permission"
-         })
-      }
+      // if (result[0].call_id != call_id) {
+      //    return res.json({
+      //       success: false,
+      //       message: "call_id don't have permission"
+      //    })
+      // }
       return res.json({
          success: true,
          message: "Exist",
@@ -38,21 +38,15 @@ router.get('/input/:call_id/:id/', function (req, res, next) {
 
 });
 
-router.get('/output/:call_id/:id/', function (req, res, next) {
+router.get('/output/:call_id/', function (req, res, next) {
    var id = req.params.id
    var call_id = req.params.call_id
 
-   Output.find({ _id: id }, (err, result) => {
+   Output.find({ call_id: call_id }, (err, result) => {
       if (err || !result[0]) {
          return res.json({
             success: false,
             message: "Not exist"
-         })
-      }
-      if (result[0].call_id != call_id) {
-         return res.json({
-            success: false,
-            message: "call_id don't have permission"
          })
       }
       return res.json({
@@ -67,23 +61,23 @@ router.get('/output/:call_id/:id/', function (req, res, next) {
 
 });
 
-router.get('/requestform/:app_id/:id/', function (req, res, next) {
+router.get('/requestform/:app_id/   ', function (req, res, next) {
    var id = req.params.id
    var app_id = req.params.app_id
 
-   Request_form.find({ _id: id }, (err, result) => {
+   Request_form.find({ app_id: app_id }, (err, result) => {
       if (err || !result[0]) {
          return res.json({
             success: false,
             message: "Not exist"
          })
       }
-      if (result[0].app_id != app_id) {
-         return res.json({
-            success: false,
-            message: "call_id don't have permission"
-         })
-      }
+      // if (result[0].app_id != app_id) {
+      //    return res.json({
+      //       success: false,
+      //       message: "call_id don't have permission"
+      //    })
+      // }
       return res.json({
          success: true,
          message: "Exist",
