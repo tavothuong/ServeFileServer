@@ -38,7 +38,7 @@ router.get('/input/:call_id', function (req, res, next) {
 
 });
 
-router.get('/output/:call_id/', function (req, res, next) {
+router.get('/output/:call_id', function (req, res, next) {
    //var id = req.params.id
    var call_id = req.params.call_id
 
@@ -61,7 +61,7 @@ router.get('/output/:call_id/', function (req, res, next) {
 
 });
 
-router.get('/requestform/:app_id/   ', function (req, res, next) {
+router.get('/requestform/:app_id', function (req, res, next) {
    //var id = req.params.id
    var app_id = req.params.app_id
 
@@ -96,32 +96,40 @@ router.get('/requestform/:app_id/   ', function (req, res, next) {
 
 });
 
-router.post('/input/:call_id/', function (req, res, next) {
+router.post('/input/:call_id', function (req, res, next) {
    var call_id = req.params.call_id
    var values = req.body.values
    var input = new Input({
       call_id: call_id,
       values: values
    })
-   input.save((errors, doc) => {
-      if (errors) {
-         res.json({
+   Input.find({ _id: id }, (err, result) => {
+      if (err || result[0]) {
+         return res.json({
             success: false,
-            message: "Some thing wrong when save"
+            message: "Existed"
          })
       }
-      else {
-         res.json({
-            success: true,
-            message: "Success",
-            result: { id: doc._id }
-         })
-      }
-   });
+      input.save((errors, doc) => {
+         if (errors) {
+            res.json({
+               success: false,
+               message: "Some thing wrong when save"
+            })
+         }
+         else {
+            res.json({
+               success: true,
+               message: "Success",
+               result: { id: doc._id }
+            })
+         }
+      });
+   })
 
 });
 
-router.post('/output/:call_id/', function (req, res, next) {
+router.post('/output/:call_id', function (req, res, next) {
    var call_id = req.params.call_id
    var values = req.body.values
    var error = req.body.error
@@ -130,67 +138,74 @@ router.post('/output/:call_id/', function (req, res, next) {
       values: values,
       error: error
    })
-   output.save((errors, doc) => {
-      if (errors) {
-         res.json({
+   Output.find({ call_id: call_id }, (err, result) => {
+      if (err || result[0]) {
+         return res.json({
             success: false,
-            message: "Some thing wrong when save"
+            message: "Existed"
          })
       }
-      else {
-         res.json({
-            success: true,
-            message: "Success",
-            result: { id: doc._id }
-         })
-      }
-   });
-
+      output.save((errors, doc) => {
+         if (errors) {
+            res.json({
+               success: false,
+               message: "Some thing wrong when save"
+            })
+         }
+         else {
+            res.json({
+               success: true,
+               message: "Success",
+               result: { id: doc._id }
+            })
+         }
+      });
+   })
 });
 
-router.post('/requestform/:app_id/', function (req, res, next) {
+router.post('/requestform/:app_id', function (req, res, next) {
    var app_id = req.params.app_id
    var fields = req.body.fields
    var request = new Request_form({
       app_id: app_id,
       fields: fields
    })
-   request.save((errors, doc) => {
-      if (errors) {
-         console.log(errors)
-         res.json({
+   Request_form.find({ app_id: app_id }, (err, result) => {
+      if (err || result[0]) {
+         return res.json({
             success: false,
-            message: "Some thing wrong when save"
+            message: "Existed"
          })
       }
-      else {
-         res.json({
-            success: true,
-            message: "Success",
-            result: { id: doc._id }
-         })
-      }
-   });
-
+      request.save((errors, doc) => {
+         if (errors) {
+            console.log(errors)
+            res.json({
+               success: false,
+               message: "Some thing wrong when save"
+            })
+         }
+         else {
+            res.json({
+               success: true,
+               message: "Success",
+               result: { id: doc._id }
+            })
+         }
+      });
+   })
 });
 
-router.delete('/input/:call_id/:id', function (req, res, next) {
-   var id = req.params.id
+router.delete('/input/:call_id', function (req, res, next) {
    var call_id = req.params.call_id
-   Input.find({ _id: id}, (err, result) => {
+   Input.find({ call_id: call_id }, (err, result) => {
       if (err || !result[0]) {
          return res.json({
             success: false,
             message: "Not exist"
          })
       }
-      if (result[0].call_id != call_id) {
-         return res.json({
-            success: false,
-            message: "call_id don't have permission"
-         })
-      }
-      Input.deleteOne({ _id: id, call_id: call_id })
+      Input.deleteOne({ call_id: call_id })
          .then((doc) => res.json({
             success: true,
             message: "success"
@@ -203,23 +218,17 @@ router.delete('/input/:call_id/:id', function (req, res, next) {
 
 });
 
-router.delete('/output/:call_id/:id', function (req, res, next) {
-   var id = req.params.id
+router.delete('/output/:call_id', function (req, res, next) {
+   //var id = req.params.id
    var call_id = req.params.call_id
-   Output.find({ _id: id }, (err, result) => {
+   Output.find({ call_id: call_id }, (err, result) => {
       if (err || !result[0]) {
          return res.json({
             success: false,
             message: "Not exist"
          })
       }
-      if (result[0].call_id != call_id) {
-         return res.json({
-            success: false,
-            message: "call_id don't have permission"
-         })
-      }
-      Output.deleteOne({ _id: id, call_id: call_id })
+      Output.deleteOne({ call_id: call_id })
          .then((doc) => res.json({
             success: true,
             message: "success"
@@ -231,23 +240,17 @@ router.delete('/output/:call_id/:id', function (req, res, next) {
    })
 });
 
-router.delete('/requestform/:app_id/:id', function (req, res, next) {
-   var id = req.params.id
+router.delete('/requestform/:app_id', function (req, res, next) {
+   // var id = req.params.id
    var app_id = req.params.app_id
-   Request_form.find({ _id: id}, (err, result) => {
+   Request_form.find({ app_id: app_id }, (err, result) => {
       if (err || !result[0]) {
          return res.json({
             success: false,
             message: "Not exist"
          })
       }
-      if (result[0].app_id != app_id) {
-         return res.json({
-            success: false,
-            message: "app_id don't have permission"
-         })
-      }
-      Request_form.deleteOne({ _id: id, app_id: app_id })
+      Request_form.deleteOne({ app_id: app_id })
          .then((doc) => res.json({
             success: true,
             message: "success"
